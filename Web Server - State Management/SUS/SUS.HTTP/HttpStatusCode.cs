@@ -6,7 +6,7 @@
         MovedPermanently = 301,
         Found = 302,
         TemporaryRedirect = 307,
-        NOtFound = 404,
+        NotFound = 404,
         ServerError = 500
     }
 }

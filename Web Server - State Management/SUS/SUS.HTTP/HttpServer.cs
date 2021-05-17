@@ -25,7 +25,7 @@ namespace SUS.HTTP
 
         public async Task StartAsync(int port)
         {
-            TcpListener listener = new TcpListener(IPAddress.Loopback, 80);
+            TcpListener listener = new TcpListener(IPAddress.Loopback, port);
 
             listener.Start();
 
@@ -71,19 +71,26 @@ namespace SUS.HTTP
                     HttpRequest request = new HttpRequest(requestAsString);
                     Console.WriteLine(requestAsString);
 
-                    var responseHtml = "<h1>Welcome!</h1>";
-                    var responseBodyBytes = Encoding.UTF8.GetBytes(responseHtml);
+                    HttpResponse response;
 
-                    var responseHttp = "HTTP/1.1 200 OK" + HttpConstants.NewLine +
-                        "Serve: SUS Server 1.0" + HttpConstants.NewLine +
-                        "Content-Type: text/html" + HttpConstants.NewLine +
-                        "Content-Lenght: " + responseBodyBytes.Length + HttpConstants.NewLine
-                        + HttpConstants.NewLine;
+                    if (routeTable.ContainsKey(request.Path))
+                    {
+                        var action = routeTable[request.Path];
 
-                    var responseHeaderBytes = Encoding.UTF8.GetBytes(responseHttp);
+                        response = action(request);
+                    }
+                    else
+                    {
+                        response = new HttpResponse("text/html", new byte[0], HttpStatusCode.NotFound);
+                    }
+
+                    response.Cookies.Add(new ResponseCookie("sid", Guid.NewGuid().ToString()) { HttpOnly = true, MaxAge = 60 * 60 });
+                    response.Headers.Add(new Header("Server", "SUS Server 1.0"));
+
+                    var responseHeaderBytes = Encoding.UTF8.GetBytes(response.ToString());
 
                     await stream.WriteAsync(responseHeaderBytes, 0, responseHeaderBytes.Length);
-                    await stream.WriteAsync(responseBodyBytes, 0, responseBodyBytes.Length);
+                    await stream.WriteAsync(response.Body, 0, response.Body.Length);
 
                     client.Close();
                 }
