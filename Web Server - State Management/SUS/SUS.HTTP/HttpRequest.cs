@@ -48,7 +48,7 @@ namespace SUS.HTTP
 
                 foreach (var cookie in cookies)
                 {
-                    Cookies.Add(new Cookie(cookiesAsString));
+                    Cookies.Add(new Cookie(cookie));
                 }
             }
 
