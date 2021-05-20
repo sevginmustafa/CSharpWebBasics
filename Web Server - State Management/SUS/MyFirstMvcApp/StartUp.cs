@@ -1,7 +1,7 @@
-﻿using SUS.HTTP;
-using System;
-using System.IO;
-using System.Text;
+﻿using MyFirstMvcApp.Controllers;
+using SUS.HTTP;
+using SUS.MvcFramework;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MyFirstMvcApp
@@ -10,50 +10,17 @@ namespace MyFirstMvcApp
     {
         static async Task Main(string[] args)
         {
-            IHttpServer server = new HttpServer();
+            List<Route> routeTable = new List<Route>();
 
-            server.AddRoute("/", HomePage);
-            server.AddRoute("/about", About);
-            server.AddRoute("/login", Login);
-            server.AddRoute("/favicon.ico", Favicon);
+            routeTable.Add(new Route("/", new HomeController().Index));
+            routeTable.Add(new Route("/users/login", new UsersController().Login));
+            routeTable.Add(new Route("/users/register", new UsersController().Register));
+            routeTable.Add(new Route("/cards/add", new CardsController().Add));
+            routeTable.Add(new Route("/cards/all", new CardsController().All));
+            routeTable.Add(new Route("/cards/collection", new CardsController().Collection));
+            routeTable.Add(new Route("/favicon.ico", new StaticFilesController().Favicon));
 
-            await server.StartAsync(80);
-        }
-
-        static HttpResponse HomePage(HttpRequest request)
-        {
-            var responseHtml = "<h1>Welcome!</h1>";
-            var responseBodyBytes = Encoding.UTF8.GetBytes(responseHtml);
-            HttpResponse response = new HttpResponse("text/html", responseBodyBytes);
-
-            return response;
-        }
-
-        static HttpResponse About(HttpRequest request)
-        {
-            var responseHtml = "<h1>About!</h1>";
-            var responseBodyBytes = Encoding.UTF8.GetBytes(responseHtml);
-            HttpResponse response = new HttpResponse("text/html", responseBodyBytes);
-
-            return response;
-        }
-
-        static HttpResponse Login(HttpRequest request)
-        {
-            var responseHtml = "<h1>Login!</h1>";
-            var responseBodyBytes = Encoding.UTF8.GetBytes(responseHtml);
-            HttpResponse response = new HttpResponse("text/html", responseBodyBytes);
-
-            return response;
-        }
-        
-        static HttpResponse Favicon(HttpRequest request)
-        {
-            var file = File.ReadAllBytes("wwwroot/favicon.ico");
-
-            var response = new HttpResponse("image/vnd.microsoft.icon", file);
-
-            return response;
+            await Host.CreateHostAsync(routeTable, 80);
         }
     }
 }
