@@ -63,11 +63,11 @@ namespace SUS.HTTP
                     string requestAsString = Encoding.UTF8.GetString(data.ToArray());
 
                     HttpRequest request = new HttpRequest(requestAsString);
-                    Console.WriteLine(requestAsString);
+                    Console.WriteLine($"{request.Method} {request.Path} => {request.Headers.Count}");
 
                     HttpResponse response;
 
-                    Route route = routeTable.FirstOrDefault(x => x.Path == request.Path);
+                    Route route = routeTable.FirstOrDefault(x => string.Compare(x.Path, request.Path, true) == 0 && x.Method == request.Method);
 
                     if (route != null)
                     {
@@ -84,7 +84,11 @@ namespace SUS.HTTP
                     var responseHeaderBytes = Encoding.UTF8.GetBytes(response.ToString());
 
                     await stream.WriteAsync(responseHeaderBytes, 0, responseHeaderBytes.Length);
-                    await stream.WriteAsync(response.Body, 0, response.Body.Length);
+
+                    if (response.Body != null)
+                    {
+                        await stream.WriteAsync(response.Body, 0, response.Body.Length);
+                    }
 
                     client.Close();
                 }
