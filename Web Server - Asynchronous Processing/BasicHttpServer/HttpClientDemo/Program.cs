@@ -61,12 +61,12 @@ namespace HttpClientDemo
 
                 Console.WriteLine(sid);
 
-                string html = $"<h1>Hello from NikiServer {DateTime.Now} for the {SessionStorage[sid]} time</h1>" +
+                string html = $"<h1>Hello from SeviServer {DateTime.Now} for the {SessionStorage[sid]} time</h1>" +
                     $"<form action=/tweet method=post><input name=username /><input name=password />" +
                     $"<input type=submit /></form>" + DateTime.Now;
 
                 string response = "HTTP/1.1 200 OK" + NewLine +
-                    "Server: NikiServer 2020" + NewLine +
+                    "Server: SeviServer 2020" + NewLine +
                     // "Location: https://www.google.com" + NewLine +
                     "Content-Type: text/html; charset=utf-8" + NewLine +
                     "X-Server-Version: 1.0" + NewLine +
