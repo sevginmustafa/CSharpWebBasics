@@ -2,6 +2,6 @@
 {
     public interface IView
     {
-        string ExecuteTemplate(object viewModel, string user);
+        string ExecuteTemplate(object viewModel);
     }
 }

@@ -1,21 +1,23 @@
 ﻿using SUS.HTTP;
 using SUS.MvcFramework;
+using static SUS.MvcFramework.BaseHttpAttribute;
 
 namespace MyFirstMvcApp.Controllers
 {
     public class UsersController : Controller
     {
-        public HttpResponse Login(HttpRequest request)
+        public HttpResponse Login()
         {
             return this.View();
         }
 
-        public HttpResponse Register(HttpRequest request)
+        public HttpResponse Register()
         {
             return this.View();
         }
 
-        public HttpResponse DoLogin(HttpRequest arg)
+        [HttpPost]
+        public HttpResponse DoLogin()
         {
             return this.Redirect("/");
         }

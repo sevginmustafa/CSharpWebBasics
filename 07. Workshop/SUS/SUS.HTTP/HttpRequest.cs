@@ -59,6 +59,21 @@ namespace SUS.HTTP
                 }
 
                 this.Body = bodyBuilder.ToString();
+
+                var parameters = this.Body.Split('&');
+
+                foreach (var parameter in parameters)
+                {
+                    var parameterParts = parameter.Split('=');
+
+                    var name = parameterParts[0];
+                    var value = parameterParts[1];
+
+                    if (!FormData.ContainsKey(name))
+                    {
+                        FormData.Add(name, value);
+                    }
+                }
             }
         }
 
@@ -71,6 +86,9 @@ namespace SUS.HTTP
 
         public ICollection<Cookie> Cookies { get; set; }
             = new List<Cookie>();
+
+        public IDictionary<string, string> FormData { get; set; }
+        = new Dictionary<string, string>();
 
         public string Body { get; set; }
     }

@@ -2,18 +2,31 @@
 using System.Text;
 using SUS.HTTP.Enums;
 using System.Runtime.CompilerServices;
+using SUS.MvcFramework.ViewEngine;
 
 namespace SUS.MvcFramework
 {
     public abstract class Controller
     {
-        public HttpResponse View([CallerMemberName] string viewPath = null)
+        private SusViewEngine viewEngine;
+
+        public Controller()
         {
-            var layout = System.IO.File.ReadAllText("Views/Shared/_Layout.cshtml");
+            this.viewEngine = new SusViewEngine();
+        }
 
+        public HttpRequest Request { get; set; }
+
+        public HttpResponse View(object viewModel = null, [CallerMemberName] string viewPath = null)
+        {
             var viewContent = System.IO.File.ReadAllText($"Views/{this.GetType().Name.Replace("Controller", string.Empty)}/{viewPath}.cshtml");
+            viewContent = this.viewEngine.GetHtml(viewContent, viewModel);
 
-            var responseHtml = layout.Replace("@RenderBody()", viewContent);
+            var layout = System.IO.File.ReadAllText("Views/Shared/_Layout.cshtml");
+            layout = layout.Replace("@RenderBody()", "____VIEW_GOES_HERE____");
+            layout = this.viewEngine.GetHtml(layout, viewModel);
+
+            var responseHtml = layout.Replace("____VIEW_GOES_HERE____", viewContent);
 
             var responseBodyBytes = Encoding.UTF8.GetBytes(responseHtml);
 

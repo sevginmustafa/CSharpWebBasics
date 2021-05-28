@@ -15,7 +15,7 @@ namespace SUS.MvcFramework.ViewEngine
             this.csharpCode = csharpCode;
         }
 
-        public string ExecuteTemplate(object viewModel, string user)
+        public string ExecuteTemplate(object viewModel)
         {
             var html = new StringBuilder();
 
