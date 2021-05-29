@@ -76,7 +76,7 @@ namespace SUS.HTTP
 
                     HttpResponse response;
 
-                    var route = this.routeTable.FirstOrDefault(rt => string.Compare(rt.Path, request.Path, true) == 0 && rt.Method==request.Method);
+                    var route = this.routeTable.FirstOrDefault(rt => string.Compare(rt.Path, request.Path, true) == 0 && rt.Method == request.Method);
 
                     if (route != null)
                     {
@@ -89,7 +89,14 @@ namespace SUS.HTTP
 
                     response.Headers.Add(new Header("Server", "SUS Server 1.0"));
 
-                    response.Cookies.Add(new ResponseCookie("sid", Guid.NewGuid().ToString()) { HttpOnly = true, MaxAge = 60 * 24 * 60 * 60 });
+                    var sessionCookie = request.Cookies.FirstOrDefault(x => x.Name == HttpConstants.SESSION_COOKIE_NAME);
+
+                    if (sessionCookie != null)
+                    {
+                        var responseSessionCookie = new ResponseCookie(sessionCookie.Name, sessionCookie.Value);
+                        responseSessionCookie.Path = "/";
+                        response.Cookies.Add(responseSessionCookie);
+                    }
 
                     var responseHeaderBytes = Encoding.UTF8.GetBytes(response.ToString());
 

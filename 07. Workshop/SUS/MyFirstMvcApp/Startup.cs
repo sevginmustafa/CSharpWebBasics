@@ -3,6 +3,8 @@ using SUS.MvcFramework;
 using MyFirstMvcApp.Controllers;
 using System.Collections.Generic;
 using SUS.HTTP.Enums;
+using MyFirstMvcApp.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyFirstMvcApp
 {
@@ -15,6 +17,7 @@ namespace MyFirstMvcApp
 
         public void Configure(List<Route> routeTable)
         {
+            new ApplicationDbContext().Database.Migrate();
         }
     }
 }
