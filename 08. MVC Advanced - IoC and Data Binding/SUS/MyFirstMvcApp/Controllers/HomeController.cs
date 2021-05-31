@@ -11,16 +11,12 @@ namespace MyFirstMvcApp.Controllers
         [HttpGet("/")]
         public HttpResponse Index()
         {
-            var viewModel = new IndexViewModel();
-            viewModel.CurrentYear = DateTime.UtcNow.Year;
-            viewModel.Message = "Welcome to BattleCards";
-
             if (this.IsUserSignedIn())
             {
-                viewModel.Message="Welcome User!";
+                return this.Redirect("/Cards/All");
             }
 
-            return this.View(viewModel);
+            return this.View();
         }
 
         public HttpResponse About()

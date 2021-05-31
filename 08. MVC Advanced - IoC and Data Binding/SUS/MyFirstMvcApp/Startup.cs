@@ -17,7 +17,7 @@ namespace MyFirstMvcApp
 
         public void Configure(List<Route> routeTable)
         {
-            //new ApplicationDbContext().Database.Migrate();
+            new ApplicationDbContext().Database.Migrate();
         }
     }
 }
