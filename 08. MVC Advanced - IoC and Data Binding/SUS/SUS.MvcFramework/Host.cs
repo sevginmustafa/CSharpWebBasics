@@ -5,6 +5,7 @@ using System.IO;
 using SUS.HTTP.Enums;
 using System.Linq;
 using System;
+using System.Reflection;
 
 namespace SUS.MvcFramework
 {
@@ -19,7 +20,7 @@ namespace SUS.MvcFramework
             application.Configure(routeTable);
 
             AutoRegisterStaticFile(routeTable);
-            AutoRegisterRoutes(routeTable, application,serviceCollection);
+            AutoRegisterRoutes(routeTable, application, serviceCollection);
 
 
             IHttpServer server = new HttpServer(routeTable);
@@ -59,18 +60,44 @@ namespace SUS.MvcFramework
                         url = attribute.Url;
                     }
 
-                    routeTable.Add(new Route(url, httpMethod, (request) =>
-                     {
-                         var instance = serviceCollection.CreateInstance(controllerType) as Controller;
-
-                         instance.Request = request;
-
-                         var response = method.Invoke(instance, new object[] { }) as HttpResponse;
-
-                         return response;
-                     }));
+                    routeTable.Add(new Route(url, httpMethod, (request) => ExecuteAction(request, controllerType, method, serviceCollection)));
                 }
             }
+        }
+
+        private static HttpResponse ExecuteAction(HttpRequest request, Type controllerType, MethodInfo action, IServiceCollection serviceCollection)
+        {
+            var instance = serviceCollection.CreateInstance(controllerType) as Controller;
+
+            instance.Request = request;
+
+            var arguments = new List<object>();
+
+            var parameters = action.GetParameters();
+            foreach (var parameter in parameters)
+            {
+                var parameterValue = GetParametersFromRequest(request, parameter.Name);
+                arguments.Add(parameterValue);
+            }
+
+            var response = action.Invoke(instance, arguments.ToArray()) as HttpResponse;
+
+            return response;
+        }
+
+        private static string GetParametersFromRequest(HttpRequest request, string parameterName)
+        {
+            if (request.FormData.ContainsKey(parameterName))
+            {
+                return request.FormData[parameterName];
+            }
+
+            if (request.QueryData.ContainsKey(parameterName))
+            {
+                return request.QueryData[parameterName];
+            }
+
+            return null;
         }
 
         private static void AutoRegisterStaticFile(List<Route> routeTable)

@@ -27,7 +27,7 @@ namespace MyFirstMvcApp.Controllers
         }
 
         [HttpPost("/Cards/Add")]
-        public HttpResponse DoAdd()
+        public HttpResponse DoAdd(string name, string image, string keyword, string attack, string health, string description)
         {
             if (!this.IsUserSignedIn())
             {
@@ -41,12 +41,12 @@ namespace MyFirstMvcApp.Controllers
 
             db.Cards.Add(new Card
             {
-                Name = this.Request.FormData["name"],
-                ImageUrl = this.Request.FormData["image"],
-                Keyword = this.Request.FormData["keyword"],
-                Attack = int.Parse(this.Request.FormData["attack"]),
-                Health = int.Parse(this.Request.FormData["health"]),
-                Description = this.Request.FormData["description"]
+                Name = name,
+                ImageUrl = image,
+                Keyword = keyword,
+                Attack = int.Parse(attack),
+                Health = int.Parse(health),
+                Description = description
             });
 
             db.SaveChanges();

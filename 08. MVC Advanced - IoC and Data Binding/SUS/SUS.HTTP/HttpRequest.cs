@@ -82,9 +82,26 @@ namespace SUS.HTTP
                 this.Session = Sessions[sessionCookie.Value];
             }
 
-            this.Body = bodyBuilder.ToString().TrimEnd('\n','\r');
+            if (this.Path.Contains('?'))
+            {
+                var pathParts = this.Path.Split(new char[] { '?' }, 2);
+                this.Path = pathParts[0];
+                this.QueryString = pathParts[1];
+            }
+            else
+            {
+                this.QueryString = string.Empty;
+            }
 
-            var parameters = this.Body.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries); ;
+            this.Body = bodyBuilder.ToString().TrimEnd('\n', '\r');
+
+            SplitParameters(this.Body, this.FormData);
+            SplitParameters(this.QueryString, this.QueryData);
+        }
+
+        private static void SplitParameters(string parametersAsString, IDictionary<string, string> output)
+        {
+            var parameters = parametersAsString.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var parameter in parameters)
             {
@@ -93,14 +110,16 @@ namespace SUS.HTTP
                 var name = parameterParts[0];
                 var value = WebUtility.UrlDecode(parameterParts[1]);
 
-                if (!FormData.ContainsKey(name))
+                if (!output.ContainsKey(name))
                 {
-                    FormData.Add(name, value);
+                    output.Add(name, value);
                 }
             }
         }
 
         public string Path { get; set; }
+
+        public string QueryString { get; set; }
 
         public HttpMethod Method { get; set; }
 
@@ -114,7 +133,10 @@ namespace SUS.HTTP
           = new Dictionary<string, string>();
 
         public IDictionary<string, string> FormData { get; set; }
-        = new Dictionary<string, string>();
+            = new Dictionary<string, string>();
+
+        public IDictionary<string, string> QueryData { get; set; }
+            = new Dictionary<string, string>();
 
         public string Body { get; set; }
     }
