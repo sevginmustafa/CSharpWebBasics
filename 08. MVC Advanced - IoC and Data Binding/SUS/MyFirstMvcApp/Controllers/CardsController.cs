@@ -9,22 +9,37 @@ namespace MyFirstMvcApp.Controllers
 {
     public class CardsController : Controller
     {
+        private readonly ApplicationDbContext db;
+
+        public CardsController(ApplicationDbContext db)
+        {
+            this.db = db;
+        }
+
         public HttpResponse Add()
         {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
             return this.View();
         }
 
         [HttpPost("/Cards/Add")]
         public HttpResponse DoAdd()
         {
-            var context = new ApplicationDbContext();
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
 
-            if (this.Request.FormData["name"].Length<5)
+            if (this.Request.FormData["name"].Length < 5)
             {
                 return this.Error("Name should be at least 5 symbols long!");
             }
 
-            context.Cards.Add(new Card
+            db.Cards.Add(new Card
             {
                 Name = this.Request.FormData["name"],
                 ImageUrl = this.Request.FormData["image"],
@@ -34,25 +49,28 @@ namespace MyFirstMvcApp.Controllers
                 Description = this.Request.FormData["description"]
             });
 
-            context.SaveChanges();
+            db.SaveChanges();
 
             return this.Redirect("/Cards/All");
         }
 
         public HttpResponse All()
         {
-            var db = new ApplicationDbContext();
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
 
             var cards = db.Cards
                 .Select(x => new CardsViewModel
-            {
-                Attack=x.Attack,
-                Health=x.Health,
-                Name=x.Name,
-                Keyword=x.Keyword,
-                Description=x.Description,
-                ImageUrl=x.ImageUrl
-            })
+                {
+                    Attack = x.Attack,
+                    Health = x.Health,
+                    Name = x.Name,
+                    Keyword = x.Keyword,
+                    Description = x.Description,
+                    ImageUrl = x.ImageUrl
+                })
             .ToList();
 
             return this.View(cards);
@@ -60,6 +78,11 @@ namespace MyFirstMvcApp.Controllers
 
         public HttpResponse Collection()
         {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
             return this.View();
         }
     }

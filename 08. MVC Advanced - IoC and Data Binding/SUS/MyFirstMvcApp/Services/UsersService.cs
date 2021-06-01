@@ -11,9 +11,9 @@ namespace MyFirstMvcApp.Services
     {
         private readonly ApplicationDbContext db;
 
-        public UsersService()
+        public UsersService(ApplicationDbContext db)
         {
-            db = new ApplicationDbContext();
+            this.db = db;
         }
 
         public string CreateUser(string username, string email, string password)

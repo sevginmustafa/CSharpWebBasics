@@ -9,21 +9,31 @@ namespace MyFirstMvcApp.Controllers
 {
     public class UsersController : Controller
     {
-        private IUsersService usersService;
+        private readonly IUsersService usersService;
 
-        public UsersController()
+        public UsersController(IUsersService usersService)
         {
-            this.usersService = new UsersService();
+            this.usersService = usersService;
         }
 
         public HttpResponse Login()
         {
+            if (this.IsUserSignedIn())
+            {
+                return this.Redirect("/");
+            }
+
             return this.View();
         }
 
         [HttpPost("/Users/Login")]
         public HttpResponse DoLogin()
         {
+            if (this.IsUserSignedIn())
+            {
+                return this.Redirect("/");
+            }
+
             var username = this.Request.FormData["username"];
             var password = this.Request.FormData["password"];
 
@@ -35,17 +45,27 @@ namespace MyFirstMvcApp.Controllers
             }
 
             this.SignIn(userId);
-            return this.Redirect("/");
+            return this.Redirect("/Cards/All");
         }
 
         public HttpResponse Register()
         {
+            if (this.IsUserSignedIn())
+            {
+                return this.Redirect("/");
+            }
+
             return this.View();
         }
 
         [HttpPost("/Users/Register")]
         public HttpResponse DoRegister()
         {
+            if (this.IsUserSignedIn())
+            {
+                return this.Redirect("/");
+            }
+
             var username = this.Request.FormData["username"];
             var email = this.Request.FormData["email"];
             var password = this.Request.FormData["password"];

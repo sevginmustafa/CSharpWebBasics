@@ -1,18 +1,18 @@
 ﻿using SUS.HTTP;
 using SUS.MvcFramework;
-using MyFirstMvcApp.Controllers;
 using System.Collections.Generic;
-using SUS.HTTP.Enums;
 using MyFirstMvcApp.Data;
 using Microsoft.EntityFrameworkCore;
+using MyFirstMvcApp.Services;
 
 namespace MyFirstMvcApp
 {
     public class Startup : IMvcApplication
     {
-        public void ConfigureServices()
+        public void ConfigureServices(IServiceCollection serviceCollection)
         {
-            //throw new System.NotImplementedException();
+            serviceCollection.Add<IUsersService, UsersService>();
+            serviceCollection.Add<ICardsService, CardsService>();
         }
 
         public void Configure(List<Route> routeTable)
