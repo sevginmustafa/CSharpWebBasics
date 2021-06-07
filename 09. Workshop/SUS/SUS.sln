@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyFirstMvcApp", "MyFirstMvc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SUS.MvcFramework.Tests", "SUS.MvcFramework.Tests\SUS.MvcFramework.Tests.csproj", "{D9511518-780F-49DC-846B-CBA66257313D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Git", "Git\Git.csproj", "{250982F3-D85C-4101-B03D-E6151C7F4797}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Git", "Git\Git.csproj", "{250982F3-D85C-4101-B03D-E6151C7F4797}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedTrip", "SharedTrip\SharedTrip.csproj", "{285CF2C5-752C-483E-AB11-545613E29E4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{250982F3-D85C-4101-B03D-E6151C7F4797}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{250982F3-D85C-4101-B03D-E6151C7F4797}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{250982F3-D85C-4101-B03D-E6151C7F4797}.Release|Any CPU.Build.0 = Release|Any CPU
+		{285CF2C5-752C-483E-AB11-545613E29E4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{285CF2C5-752C-483E-AB11-545613E29E4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{285CF2C5-752C-483E-AB11-545613E29E4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{285CF2C5-752C-483E-AB11-545613E29E4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{35D12DF3-F2A0-4055-A9C7-DD84C8A24F96} = {FCE0DEE3-BA7C-4071-AE0A-37964022847D}
 		{250982F3-D85C-4101-B03D-E6151C7F4797} = {FCE0DEE3-BA7C-4071-AE0A-37964022847D}
+		{285CF2C5-752C-483E-AB11-545613E29E4B} = {FCE0DEE3-BA7C-4071-AE0A-37964022847D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {90B91939-A60E-4427-BAAF-47B7802D2E6B}
