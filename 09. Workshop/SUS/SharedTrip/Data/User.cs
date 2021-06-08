@@ -24,7 +24,6 @@ namespace SharedTrip.Data
 
         [Required]
         [MinLength(6)]
-        [MaxLength(20)]
         public string Password { get; set; }
 
 
