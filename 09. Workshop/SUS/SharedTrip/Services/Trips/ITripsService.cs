@@ -7,8 +7,10 @@ namespace SharedTrip.Services.Trips
     {
         void AddTrip(TripAddModel model);
 
-        IEnumerable<TripAddModel> GetAll();
+        IEnumerable<TripViewModel> GetAll();
 
-        TripAddModel GetDetails(string tripId);
+        TripDetailsViewModel GetDetails(string tripId);
+
+        string AddUserToTrip(string tripId, string userId);
     }
 }

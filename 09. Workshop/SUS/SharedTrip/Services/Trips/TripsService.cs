@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using static SUS.MvcFramework.BaseHttpAttribute;
 
 namespace SharedTrip.Services.Trips
 {
@@ -33,29 +34,50 @@ namespace SharedTrip.Services.Trips
             this.db.SaveChanges();
         }
 
-        public IEnumerable<TripAddModel> GetAll()
+        public string AddUserToTrip(string tripId, string userId)
+        {
+            var userTrip = this.db.UsersTrips.FirstOrDefault(x => x.UserId == userId && x.TripId == tripId);
+
+            if (userTrip == null && this.db.Trips.FirstOrDefault(x => x.Id == tripId && x.Seats - x.UserTrips.Count > 0) != null)
+            {
+                this.db.UsersTrips.Add(new UserTrip
+                {
+                    UserId = userId,
+                    TripId = tripId
+                });
+
+                this.db.SaveChanges();
+
+                return tripId;
+            }
+
+            return null;
+        }
+
+        public IEnumerable<TripViewModel> GetAll()
         {
             return this.db.Trips
-                .Select(x => new TripAddModel
+                .Select(x => new TripViewModel
                 {
-                    Id=x.Id,
+                    Id = x.Id,
                     StartPoint = x.StartPoint,
                     EndPoint = x.EndPoint,
                     DepartureTime = x.DepartureTime.ToString("G"),
-                    Seats = x.Seats
+                    Seats = x.Seats - x.UserTrips.Count
                 })
                 .ToList();
         }
 
-        public TripAddModel GetDetails(string tripId)
+        public TripDetailsViewModel GetDetails(string tripId)
         {
             return this.db.Trips.Where(x => x.Id == tripId)
-             .Select(x => new TripAddModel
+             .Select(x => new TripDetailsViewModel
              {
+                 Id = x.Id,
                  StartPoint = x.StartPoint,
                  EndPoint = x.EndPoint,
-                 DepartureTime = x.DepartureTime.ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture),
-                 Seats = x.Seats,
+                 DepartureTime = x.DepartureTime.ToString("s"),
+                 Seats = x.Seats - x.UserTrips.Count,
                  ImagePath = x.ImagePath,
                  Description = x.Description
              })

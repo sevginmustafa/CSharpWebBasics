@@ -57,7 +57,7 @@ namespace SharedTrip.Controllers
                 return this.Error("End Point is required!");
             }
 
-            if (!DateTime.TryParseExact(model.DepartureTime, "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture,DateTimeStyles.None, out _))
+            if (!DateTime.TryParseExact(model.DepartureTime, "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
                 return this.Error("Invalid DateTime format!");
             }
@@ -92,6 +92,23 @@ namespace SharedTrip.Controllers
             var model = this.tripsService.GetDetails(tripId);
 
             return this.View(model);
+        }
+
+        public HttpResponse AddUserToTrip(string tripId)
+        {
+            if (!this.IsUserSignedIn())
+            {
+                return this.Redirect("/Users/Login");
+            }
+
+            var userTripId = this.tripsService.AddUserToTrip(tripId, this.GetUserId());
+
+            if (userTripId == null)
+            {
+                return this.Redirect($"/Trips/Details?tripId={tripId}");
+            }
+
+            return this.Redirect("/Trips/All");
         }
     }
 }
