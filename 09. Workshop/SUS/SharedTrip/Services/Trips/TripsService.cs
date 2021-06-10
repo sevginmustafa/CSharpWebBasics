@@ -34,11 +34,11 @@ namespace SharedTrip.Services.Trips
             this.db.SaveChanges();
         }
 
-        public string AddUserToTrip(string tripId, string userId)
+        public bool AddUserToTrip(string tripId, string userId)
         {
             var userTrip = this.db.UsersTrips.FirstOrDefault(x => x.UserId == userId && x.TripId == tripId);
 
-            if (userTrip == null && this.db.Trips.FirstOrDefault(x => x.Id == tripId && x.Seats - x.UserTrips.Count > 0) != null)
+            if (userTrip == null)
             {
                 this.db.UsersTrips.Add(new UserTrip
                 {
@@ -48,10 +48,10 @@ namespace SharedTrip.Services.Trips
 
                 this.db.SaveChanges();
 
-                return tripId;
+                return true;
             }
 
-            return null;
+            return false;
         }
 
         public IEnumerable<TripViewModel> GetAll()
@@ -82,6 +82,11 @@ namespace SharedTrip.Services.Trips
                  Description = x.Description
              })
              .FirstOrDefault();
+        }
+
+        public bool HasAvailableSeats(string tripId)
+        {
+            return this.db.Trips.Any(x => x.Id == tripId && x.Seats - x.UserTrips.Count > 0);
         }
     }
 }

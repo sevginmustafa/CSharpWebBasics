@@ -11,6 +11,8 @@ namespace SharedTrip.Services.Trips
 
         TripDetailsViewModel GetDetails(string tripId);
 
-        string AddUserToTrip(string tripId, string userId);
+        bool AddUserToTrip(string tripId, string userId);
+
+        bool HasAvailableSeats(string tripId);
     }
 }

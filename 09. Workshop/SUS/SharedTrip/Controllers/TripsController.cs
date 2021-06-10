@@ -101,9 +101,12 @@ namespace SharedTrip.Controllers
                 return this.Redirect("/Users/Login");
             }
 
-            var userTripId = this.tripsService.AddUserToTrip(tripId, this.GetUserId());
+            if (!this.tripsService.HasAvailableSeats(tripId))
+            {
+                return this.Error("No available seats!");
+            }
 
-            if (userTripId == null)
+            if (!this.tripsService.AddUserToTrip(tripId, this.GetUserId()))
             {
                 return this.Redirect($"/Trips/Details?tripId={tripId}");
             }
