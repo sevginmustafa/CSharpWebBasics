@@ -30,7 +30,7 @@ namespace Andreys.Services.Users
             {
                 Username = model.Username,
                 Email = model.Email,
-                Password = model.Password
+                Password = ComputeHash(model.Password)
             };
 
             this.db.Users.Add(user);
